@@ -5,7 +5,7 @@ base = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../')
 sys.path.append(base)
 
 
-def generate_script(cmd, script_save_path, run_path, log_path, ex_name, resource='rt_F=1', max_time='72:00:00', conda_path: str = '', conda_env='', cuda_version='10.0/10.0.130', cudnn_version='7.6/7.6.2'):
+def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, resource='rt_F=1', max_time='72:00:00', conda_path: str = '', conda_env='', optional_cmds=[], cuda_version='10.0/10.0.130', cudnn_version='7.6/7.6.2'):
     """
     This is helper function to generate abci job script. (About job script please check https://docs.abci.ai/ja/03/#submit-a-batch-job)
 
@@ -19,6 +19,7 @@ def generate_script(cmd, script_save_path, run_path, log_path, ex_name, resource
     - max_time (str): maximum execution time for an experiment. when execution time of job exceed max_time, job is rejected.
     - conda_path (str): path to conda. if you want to use virtual env in batch job, you have to activate it in a job script.
     - conda_env (str): vitrual environment name which is used by conda.
+    - optional_cmds (list): list of optional commands executed before [cmd]. example usage is declare api key of online logger.
     """
     SUPPORTED_RESOURCE_TYPE = 'rt_F rt_G.large rt_G.small rt_C.large rt_C.small'.split()
 
@@ -47,10 +48,16 @@ def generate_script(cmd, script_save_path, run_path, log_path, ex_name, resource
         f.write('module load cuda/{cuda_version}\n'.format(cuda_version=cuda_version))
         f.write('module load cudnn/{cudnn_version}\n\n'.format(cudnn_version=cudnn_version))
 
+        # optional
+        if optional_cmds:
+            for optional_cmd in optional_cmds:
+                f.write('{optional_cmd}\n'.format(optional_cmd=optional_cmd))
+            f.write('\n')
+
         # execute command
         f.write('cd {run_path}\n'.format(run_path=run_path))
         f.write(cmd)
 
 
 if __name__ == '__main__':
-    generate_script('python hoge.py', '../logs/test_generate_script', '/run/path', '../logs/log_path/log.o', 'test_generate_script')
+    generate_job_script('python hoge.py', '../logs/test_generate_script', '/run/path', '../logs/log_path/log.o', 'test_generate_script', optional_cmds=['export ONLINE_LOGGER_API_KEY=xxxxxxxx'])
