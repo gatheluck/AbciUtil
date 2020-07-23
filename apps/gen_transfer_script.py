@@ -5,7 +5,7 @@ from context import abci_util
 targetdir = '/home/acb10767ym/scratch/Stronghold/logs/train'
 script_save_dir = '/home/acb10767ym/scratch/Stronghold/logs/abci/transfer_script'
 run_path = '/home/acb10767ym/scratch/Stronghold/apps'
-log_path = '/home/acb10767ym/scratch/Stronghold/logs/abci/abcilog/transfer'
+log_dir = '/home/acb10767ym/scratch/Stronghold/logs/abci/abcilog/transfer'
 # targetdir = '/home/gatheluck/Desktop/FBDB/train'
 # script_save_dir = '/home/gatheluck/Desktop/test'
 # run_path = '/run/path'
@@ -66,6 +66,7 @@ def generate_transfer_script(targetdir, unfreeze_levels=[0, 1, 2, 3], augmentati
                     joined_cmd = ' '.join(cmd)
                     ex_name = 'transfer_{source}_{source_aug}_2_{target}_{target_aug}_unfreeze-{unfreeze}'.format(source=conf['dataset']['name'], source_aug=conf['augmentation']['name'], target=target_dataset, target_aug=augmentation, unfreeze=unfreeze_level)
                     script_save_path = os.path.join(script_save_dir, ex_name + ('.sh'))
+                    log_path = os.path.join(log_dir, ex_name + '.o')
 
                     abci_util.generate_job_script(joined_cmd, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=['export ONLINE_LOGGER_API_KEY=NmyQglPnLn5hXygaFurgEHG5M'])
 
