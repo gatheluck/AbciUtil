@@ -1,0 +1,25 @@
+cmd: null 
+script_save_path: null
+run_path: null
+log_path: null
+ex_name: null 
+resource: 'rt_F=1'
+max_time: '72:00:00'
+conda_path: ~/miniconda3
+conda_env: ''
+optional_cmds: null 
+cuda_version: 10.0/10.0.130 
+cudnn_version: 7.6/7.6.2
+
+hydra:
+  job:
+    config:
+      override_dirname:
+        kv_sep: ':'
+        item_sep: '-'
+        exclude_keys: []
+  run:
+    dir: ../logs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}_${ex_name}
+  sweep:
+    dir: ../logs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}_${ex_name}
+    subdir: .
