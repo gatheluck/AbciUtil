@@ -5,7 +5,7 @@ base = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../')
 sys.path.append(base)
 
 
-def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, resource='rt_F=1', max_time='72:00:00', conda_path: str = '', conda_env='', optional_cmds=[], cuda_version='10.0/10.0.130', cudnn_version='7.6/7.6.2'):
+def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, resource='rt_F=1', max_time='72:00:00', conda_path='', conda_env='', optional_cmds=[], cuda_version='10.0/10.0.130', cudnn_version='7.6/7.6.2', **kwargs):
     """
     This is helper function to generate abci job script. (About job script please check https://docs.abci.ai/ja/03/#submit-a-batch-job)
 
@@ -25,8 +25,13 @@ def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, reso
 
     assert resource.split('=')[0] in SUPPORTED_RESOURCE_TYPE
 
-    os.makedirs(os.path.dirname(script_save_path), exist_ok=True)
-    os.makedirs(log_path, exist_ok=True)
+    script_save_dir = os.path.dirname(script_save_path)
+    log_dir = os.path.dirname(log_path)
+
+    if script_save_dir:
+        os.makedirs(script_save_dir, exist_ok=True)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
 
     with open(script_save_path, mode='w') as f:
         f.write('#!/bin/bash\n\n')
