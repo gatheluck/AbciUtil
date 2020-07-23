@@ -2,6 +2,7 @@ import os
 
 import glob
 import shutil
+import yaml
 import click
 
 
@@ -48,10 +49,22 @@ def pick_targets(targetdir, faildir_name='looks_failed', targets={'weight': 'mod
     return success, fail
 
 
+def parse_config(confpath):
+    with open(confpath) as f:
+        conf = yaml.safe_load(f.read())
+
+        print(conf)
+
+
+
 if __name__ == '__main__':
     targetdir = '/home/gatheluck/Desktop/FBDB/train'
     success, fail = pick_targets(targetdir)
-    print(success)
-    print(fail)
-    print(len(success))
-    print(len(fail))
+    # print(success)
+    # print(fail)
+    # print(len(success))
+    # print(len(fail))
+
+    for k, v in success.items():
+        parse_config(v['config'])
+        break
