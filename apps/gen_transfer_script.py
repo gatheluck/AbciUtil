@@ -2,7 +2,7 @@ import os
 import yaml
 from context import abci_util
 
-targetdir = 'home/acb10767ym/scratch/Stronghold/logs/train'
+targetdir = '/home/acb10767ym/scratch/Stronghold/logs/train'
 script_save_dir = '/home/acb10767ym/scratch/Stronghold/logs/abci/transfer_script'
 run_path = '/home/acb10767ym/scratch/Stronghold/apps'
 log_path = '/home/acb10767ym/scratch/Stronghold/logs/abci/abcilog/transfer'
