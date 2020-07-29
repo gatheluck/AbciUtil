@@ -1,6 +1,7 @@
 import os
 import argparse
 import glob
+import time
 import subprocess
 
 
@@ -15,4 +16,4 @@ if __name__ == '__main__':
         if script.endswith('.sh'):
             cmd = 'qsub -g gca50149 {target_script}'.format(target_script=script)
             subprocess.call(cmd)
-
+            time.sleep(3)  # to prevent confliction of hydra save dirs.
