@@ -10,7 +10,7 @@ def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, reso
     This is helper function to generate abci job script. (About job script please check https://docs.abci.ai/ja/03/#submit-a-batch-job)
 
     Args
-    - cmd (str): main command which is executed by ABCI.
+    - cmd (str or list): main command which is executed by ABCI.
     - scrtipt_save_path (str): generated scripts are saved under this path.
     - run_path (str): [cmd] is executed from this path.
     - log_path (str): log file of abci is saved under this path.
@@ -61,7 +61,10 @@ def generate_job_script(cmd, script_save_path, run_path, log_path, ex_name, reso
 
         # execute command
         f.write('cd {run_path}\n'.format(run_path=run_path))
-        f.write(cmd)
+        if type(cmd) != list:
+            cmd = [cmd]
+        for cmd_i in cmd:
+            f.write(cmd_i + '\n')
 
 
 if __name__ == '__main__':

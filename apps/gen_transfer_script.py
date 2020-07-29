@@ -1,5 +1,6 @@
 import os
 import yaml
+import uuid
 from context import abci_util
 
 targetdir = '/home/acb10767ym/scratch/Stronghold/logs/train'
@@ -12,7 +13,7 @@ log_dir = '/home/acb10767ym/scratch/Stronghold/logs/abci/abcilog/transfer'
 # log_path = '/home/gatheluck/Desktop/test/log'
 
 
-def generate_transfer_script(targetdir, unfreeze_levels=[0, 1, 2, 3], augmentations=['standard', 'patch_gaussian']):
+def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['standard', 'patch_gaussian']):
     success, _ = abci_util.pick_targets(targetdir)
 
     # loop for success
@@ -25,6 +26,7 @@ def generate_transfer_script(targetdir, unfreeze_levels=[0, 1, 2, 3], augmentati
             for unfreeze_level in unfreeze_levels:
                 for augmentation in augmentations:
 
+                    cmds = list()
                     cmd = list()
                     cmd.append('python transfer.py')
                     cmd.append('gpus=4')
@@ -68,7 +70,22 @@ def generate_transfer_script(targetdir, unfreeze_levels=[0, 1, 2, 3], augmentati
                     script_save_path = os.path.join(script_save_dir, ex_name + ('.sh'))
                     log_path = os.path.join(log_dir, ex_name + '.o')
 
-                    abci_util.generate_job_script(joined_cmd, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=['export ONLINE_LOGGER_API_KEY=NmyQglPnLn5hXygaFurgEHG5M'])
+                    optional_cmds = ['export ONLINE_LOGGER_API_KEY=NmyQglPnLn5hXygaFurgEHG5M',
+                                     'export EXP_ID={exp_id}'.format(exp_id=uuid.uuid4())]
+
+                    # append to cmds
+                    cmds.append(joined_cmd)
+
+                    # cmd for test
+                    cmds.append('python test.py tester=acc arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    if target_dataset == 'cifar10':
+                        cmds.append('python test.py tester=corruption arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    cmds.append('python test.py tester=spacial arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    cmds.append('python test.py tester=sensitivity arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    cmds.append('python test.py tester=layer arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    cmds.append('python test.py tester=fourier arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+
+                    abci_util.generate_job_script(joined_cmd, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=optional_cmds)
 
 
 if __name__ == '__main__':
