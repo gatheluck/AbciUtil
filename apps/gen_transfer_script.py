@@ -85,7 +85,7 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                     cmds.append('python test.py tester=layer arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
                     cmds.append('python test.py tester=fourier arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
 
-                    abci_util.generate_job_script(joined_cmd, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=optional_cmds)
+                    abci_util.generate_job_script(cmds, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=optional_cmds)
 
 
 if __name__ == '__main__':
