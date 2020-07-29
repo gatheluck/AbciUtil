@@ -79,7 +79,7 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                     # cmd for test
                     cmds.append('python test.py tester=acc arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
                     if target_dataset == 'cifar10':
-                        cmds.append('python test.py tester=corruption arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset + '-c'))
+                        cmds.append('python test.py tester=corruption arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset + 'c'))
                     cmds.append('python test.py tester=spacial arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
                     cmds.append('python test.py tester=sensitivity arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
                     cmds.append('python test.py tester=layer arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
