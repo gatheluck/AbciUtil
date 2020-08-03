@@ -13,7 +13,7 @@ log_dir = '/home/acb10767ym/scratch/Stronghold/logs/abci/abcilog/transfer'
 # log_path = '/home/gatheluck/Desktop/test/log'
 
 
-def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['standard', 'patch_gaussian']):
+def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['standard', 'patch_gaussian'], datasets=['cifar10', 'imagenet100']):
     success, _ = abci_util.pick_targets(targetdir)
 
     # loop for success
@@ -51,12 +51,18 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                         target_dataset = 'cifar10'
                         cmd.append('dataset=cifar10')
                         cmd.append('batch_size=32')
+                        batch_size = 1024  # set batch_size for test. Without this, ABCI causes out of memory.
                     elif conf['dataset']['input_size'] == 224:
                         target_dataset = 'imagenet100'
                         cmd.append('dataset=imagenet100')
                         cmd.append('batch_size=256')
+                        batch_size = 256  # set batch_size for test. Without this, ABCI causes out of memory.
                     else:
                         raise NotImplementedError
+
+                    # if target_dataset is not interested one, continue.
+                    if target_dataset not in datasets:
+                        continue
 
                     cmd.append('source_num_classes={}'.format(conf['dataset']['num_classes']))
 
@@ -76,12 +82,6 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                     # append to cmds
                     cmds.append(joined_cmd)
 
-                    # set batch_size for test. Without this, ABCI causes out of memory.
-                    if conf['dataset']['name'] in 'imagenet100 imagenet'.split():
-                        batch_size = 256
-                    else:
-                        batch_size = 1024
-
                     # cmd for test
                     cmds.append('python test.py tester=acc arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
                     if target_dataset == 'cifar10':
@@ -95,4 +95,12 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
 
 
 if __name__ == '__main__':
-    generate_transfer_script(targetdir)
+    import argparse
+    
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-a", "--augmentations", type=str, nargs="+", default=['standard', 'patch_gaussian'])
+    parser.add_argument("-u", "--unfreeze_levels", type=str, nargs="+", default=[2, 3])
+    parser.add_argument("-d", "--datasets", type=str, nargs="+", default=['cifar10', 'imagenet100'])
+    opt = parser.parse_args()
+
+    generate_transfer_script(targetdir, augmentations=opt.augmentations, unfreeze_levels=opt.unfreeze_levels, datasets=opt.datasets)
