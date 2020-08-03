@@ -76,14 +76,20 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                     # append to cmds
                     cmds.append(joined_cmd)
 
+                    # set batch_size for test. Without this, ABCI causes out of memory.
+                    if conf['dataset']['name'] in 'imagenet100 imagenet'.split():
+                        batch_size = 256
+                    else:
+                        batch_size = 1024
+
                     # cmd for test
-                    cmds.append('python test.py tester=acc arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                    cmds.append('python test.py tester=acc arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
                     if target_dataset == 'cifar10':
-                        cmds.append('python test.py tester=corruption arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset + 'c'))
-                    cmds.append('python test.py tester=spacial arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
-                    cmds.append('python test.py tester=sensitivity arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
-                    cmds.append('python test.py tester=layer arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
-                    cmds.append('python test.py tester=fourier arch={arch} dataset={dataset}'.format(arch=conf['arch'], dataset=target_dataset))
+                        cmds.append('python test.py tester=corruption arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset + 'c', batch_size=batch_size))
+                    cmds.append('python test.py tester=spacial arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
+                    cmds.append('python test.py tester=sensitivity arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
+                    cmds.append('python test.py tester=layer arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
+                    cmds.append('python test.py tester=fourier arch={arch} dataset={dataset} batch_size={batch_size}'.format(arch=conf['arch'], dataset=target_dataset, batch_size=batch_size))
 
                     abci_util.generate_job_script(cmds, script_save_path, run_path, log_path, ex_name, conda_path='/home/acb10767ym/miniconda3', conda_env='nao', optional_cmds=optional_cmds)
 
