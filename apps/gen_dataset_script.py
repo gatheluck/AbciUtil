@@ -22,14 +22,14 @@ def generate_datset_script(metrics: list, norm_types: list, num_image_per_class:
                 cmd.append('python generate.py')
                 cmd.append('metric={}'.format(metric))
                 cmd.append('norm_type={}'.format(norm_type))
-                cmd.append('num_image_per_class='.format(num_image_per_class))
+                cmd.append('num_image_per_class={}'.format(num_image_per_class))
                 cmd.append('num_basis={}'.format(num_basis))
                 cmd.append('image_size={}'.format(image_size))
                 cmd.append('val_ratio={}'.format(val_ratio))
                 cmd.append('log_dir={}'.format(log_dir))
 
                 datasetname = '_'.join(['fbdb', metric, norm_type, str(num_image_per_class), str(num_basis), str(image_size)])
-                script_save_path = os.path.join(script_save_dir, datasetname)
+                script_save_path = os.path.join(script_save_dir, datasetname + '.sh')
                 log_path = os.path.join(log_dir, datasetname + '.o')
 
                 # append to cmd
@@ -51,10 +51,8 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     if opt.val_ratio > 0.0:
-        num_image_per_class = int((1.0 + opt.val_ratio) * opt.num_image_per_class_train)
+        num_image_per_class = int((1.0 + opt.val_ratio) * float(opt.num_image_per_class_train))
     else:
         num_image_per_class = opt.num_image_per_class_train
-
-    num_image_per_class = num_image_per_class
 
     generate_datset_script(metrics=opt.metrics, norm_types=opt.norm_types, num_image_per_class=num_image_per_class, num_basies=opt.num_basies, image_sizes=opt.image_sizes, val_ratio=opt.val_ratio, log_dir=opt.log_dir)
