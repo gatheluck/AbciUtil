@@ -5,7 +5,7 @@ from context import abci_util
 
 script_save_dir = '/home/acb10767ym/scratch/FourierBasisDB/logs/abci/gen_dataset'
 run_path = '/home/acb10767ym/scratch/FourierBasisDB/apps'
-log_dir = '/home/acb10767ym/scratch/FourierBasisDB/logs/abci/abcilog/gen_dataset'
+output_log_dir = '/home/acb10767ym/scratch/FourierBasisDB/logs/abci/abcilog/gen_dataset'
 # targetdir = '/home/gatheluck/Desktop/FBDB/train'
 # script_save_dir = '/home/gatheluck/Desktop/test'
 # run_path = '/run/path'
@@ -30,7 +30,7 @@ def generate_datset_script(metrics: list, norm_types: list, num_image_per_class:
 
                 datasetname = '_'.join(['fbdb', metric, norm_type, str(num_image_per_class), str(num_basis), str(image_size)])
                 script_save_path = os.path.join(script_save_dir, datasetname + '.sh')
-                log_path = os.path.join(log_dir, datasetname + '.o')
+                log_path = os.path.join(output_log_dir, datasetname + '.o')
 
                 # append to cmd
                 cmds = [' '.join(cmd)]
