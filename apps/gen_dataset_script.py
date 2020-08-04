@@ -57,4 +57,4 @@ if __name__ == '__main__':
 
     opt.num_image_per_class = num_image_per_class
 
-    generate_datset_script(metrics=opt.metrics, norm_types=opt.norm_types, num_image_per_class=num_image_per_class, num_basies=opt.num_basies, image_sizes=opt.image_sizes, val_ratio=opt.val_ratio, log_dir=opt.log_dir)
+    generate_datset_script(metrics=opt.metrics, norm_types=opt.norm_types, num_image_per_class=opt.num_image_per_class, num_basies=opt.num_basies, image_sizes=opt.image_sizes, val_ratio=opt.val_ratio, log_dir=opt.log_dir)
