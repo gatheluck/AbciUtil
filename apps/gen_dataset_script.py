@@ -28,7 +28,7 @@ def generate_datset_script(metrics: list, norm_types: list, num_image_per_class:
                 cmd.append('val_ratio={}'.format(val_ratio))
                 cmd.append('log_dir={}'.format(log_dir))
 
-                datasetname = '_'.join(['fbdb', metrics, norm_type, str(num_image_per_class), str(num_basis), str(image_size)])
+                datasetname = '_'.join(['fbdb', metric, norm_type, str(num_image_per_class), str(num_basis), str(image_size)])
                 script_save_path = os.path.join(script_save_dir, datasetname)
                 log_path = os.path.join(log_dir, datasetname + '.o')
 
