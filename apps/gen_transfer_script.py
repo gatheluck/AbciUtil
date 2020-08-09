@@ -1,6 +1,8 @@
 import os
-import yaml
 import uuid
+
+import yaml
+
 from context import abci_util
 
 targetdir = '/home/acb10767ym/scratch/Stronghold/logs/train'
@@ -50,7 +52,7 @@ def generate_transfer_script(targetdir, unfreeze_levels=[2, 3], augmentations=['
                     if conf['dataset']['input_size'] == 32:
                         target_dataset = 'cifar10'
                         cmd.append('dataset=cifar10')
-                        cmd.append('batch_size=32')
+                        cmd.append('batch_size=128')
                         batch_size = 1024  # set batch_size for test. Without this, ABCI causes out of memory.
                     elif conf['dataset']['input_size'] == 224:
                         target_dataset = 'imagenet100'
